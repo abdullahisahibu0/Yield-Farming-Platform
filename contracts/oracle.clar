@@ -23,4 +23,3 @@
 (define-read-only (get-price (token principal))
   (map-get? price-feeds { token: token })
 )
-
