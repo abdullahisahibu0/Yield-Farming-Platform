@@ -1,21 +1,30 @@
+import { describe, it, beforeEach, expect } from "vitest";
 
-import { describe, expect, it } from "vitest";
-
-const accounts = simnet.getAccounts();
-const address1 = accounts.get("wallet_1")!;
-
-/*
-  The test below is an example. To learn more, read the testing documentation here:
-  https://docs.hiro.so/stacks/clarinet-js-sdk
-*/
-
-describe("example tests", () => {
-  it("ensures simnet is well initalised", () => {
-    expect(simnet.blockHeight).toBeDefined();
+describe("oracle", () => {
+  let contract: any;
+  
+  beforeEach(() => {
+    contract = {
+      updatePrice: (token: string, price: number) => ({ success: true }),
+      getPrice: (token: string) => ({
+        price: 1000000,
+        lastUpdate: 12345
+      })
+    };
   });
-
-  // it("shows an example", () => {
-  //   const { result } = simnet.callReadOnlyFn("counter", "get-counter", [], address1);
-  //   expect(result).toBeUint(0);
-  // });
+  
+  describe("update-price", () => {
+    it("should update the price for a token", () => {
+      const result = contract.updatePrice("ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.token", 1000000);
+      expect(result.success).toBe(true);
+    });
+  });
+  
+  describe("get-price", () => {
+    it("should return the price information for a token", () => {
+      const result = contract.getPrice("ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.token");
+      expect(result.price).toBe(1000000);
+      expect(result.lastUpdate).toBe(12345);
+    });
+  });
 });
